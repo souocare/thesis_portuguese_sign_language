@@ -1,7 +1,5 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
-//import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 
 final client = http.Client();
@@ -25,8 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void generateRandomLetter() {
-    //const alphabet = 'abcdefghijklmnopqrstuvwxyz';
-    const alphabet = 'ab';
+    const alphabet = 'abcdefghijklmnopqrstuvwxyz';
     final random = Random();
     setState(() {
       letter = alphabet[random.nextInt(alphabet.length)];
@@ -99,7 +96,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
               const SizedBox(height: 25),
               if (letter.isNotEmpty) ...[
-                Image.asset('assets/letters/letter_${letter}.png', height: 150),
+                Image.asset('assets/letters/bothways/letter_${letter}.png',
+                    height: 150),
                 const SizedBox(height: 20),
                 Center(
                   child: Text(

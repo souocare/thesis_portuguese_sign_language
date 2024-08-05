@@ -38,10 +38,11 @@ dependencies:
   dcdg: ^4.1.0
   dropdown_search: ^5.0.6
   permission_handler: ^10.2.0
-  tflite_flutter: ^0.9.0
+  tflite_flutter: ^0.10.4
   image: ^3.0.0 
   get: ^4.6.5
   camera: ^0.9.4+5
+  diacritic: ^0.1.5
   
 
 dev_dependencies:
@@ -73,10 +74,59 @@ flutter:
     - assets/iconsbar/traduzir_logo_selected.png
     - assets/iconsbar/traduzir_logo.png
     - assets/logoapp.png
-    - assets/letters/letter_a.png
-    - assets/letters/letter_b.png
-    - assets/ca/lets-encrypt-r3.pem
     - assets/tf_model/rock_paper_scissors_model.tflite
+    - assets/letters/bothways/letter_a.png
+    - assets/letters/bothways/letter_b.png
+    - assets/letters/bothways/letter_c.png
+    - assets/letters/bothways/letter_d.png
+    - assets/letters/bothways/letter_e.png
+    - assets/letters/bothways/letter_f.png
+    - assets/letters/bothways/letter_g.png
+    - assets/letters/bothways/letter_h.png
+    - assets/letters/bothways/letter_i.png
+    - assets/letters/bothways/letter_j.png
+    - assets/letters/bothways/letter_k.png
+    - assets/letters/bothways/letter_l.png
+    - assets/letters/bothways/letter_m.png
+    - assets/letters/bothways/letter_n.png
+    - assets/letters/bothways/letter_o.png
+    - assets/letters/bothways/letter_p.png
+    - assets/letters/bothways/letter_q.png
+    - assets/letters/bothways/letter_r.png
+    - assets/letters/bothways/letter_s.png
+    - assets/letters/bothways/letter_t.png
+    - assets/letters/bothways/letter_u.png
+    - assets/letters/bothways/letter_v.png
+    - assets/letters/bothways/letter_w.png
+    - assets/letters/bothways/letter_x.png
+    - assets/letters/bothways/letter_y.png
+    - assets/letters/bothways/letter_z.png
+    - assets/letters/oneway/letter_a.png
+    - assets/letters/oneway/letter_b.png
+    - assets/letters/oneway/letter_c.png
+    - assets/letters/oneway/letter_d.png
+    - assets/letters/oneway/letter_e.png
+    - assets/letters/oneway/letter_f.png
+    - assets/letters/oneway/letter_g.png
+    - assets/letters/oneway/letter_h.png
+    - assets/letters/oneway/letter_i.png
+    - assets/letters/oneway/letter_j.png
+    - assets/letters/oneway/letter_k.png
+    - assets/letters/oneway/letter_l.png
+    - assets/letters/oneway/letter_m.png
+    - assets/letters/oneway/letter_n.png
+    - assets/letters/oneway/letter_o.png
+    - assets/letters/oneway/letter_p.png
+    - assets/letters/oneway/letter_q.png
+    - assets/letters/oneway/letter_r.png
+    - assets/letters/oneway/letter_s.png
+    - assets/letters/oneway/letter_t.png
+    - assets/letters/oneway/letter_u.png
+    - assets/letters/oneway/letter_v.png
+    - assets/letters/oneway/letter_w.png
+    - assets/letters/oneway/letter_x.png
+    - assets/letters/oneway/letter_y.png
+    - assets/letters/oneway/letter_z.png
     
 
   # An image asset can refer to one or more resolution-specific "variants", see
