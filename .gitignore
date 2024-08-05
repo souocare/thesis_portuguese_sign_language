@@ -13,3 +13,44 @@ build/
 .DS_Store
 Thumbs.db
 
+# Flutter/Dart/Pub related
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+pubspec.lock
+
+# Build outputs
+build/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/.symlinks/
+ios/Pods/
+ios/Podfile.lock
+ios/Flutter/Flutter.podspec.lock
+android/.gradle/
+android/app/build/
+android/gradle/
+android/gradle-wrapper.jar
+android/gradle-wrapper.properties
+
+# IDE specific
+.idea/
+.vscode/
+
+# macOS specific
+.DS_Store
+
+# Windows specific
+Thumbs.db
+
+# Log files
+*.log
+
+# Miscellaneous
+*.tmp
+*.swp
+
+# Dart analysis
+analysis_options.yaml
+
