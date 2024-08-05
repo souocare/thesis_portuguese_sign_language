@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Metro Lisboa</name>
+    <NetworkLink>
+      <name>Mapa sem título</name>
+      <Link>
+        <href><![CDATA[https://www.google.com/maps/d/u/0/kml?forcekml=1&mid=1GUIGRzKmSUn0v0XGiwcI7cTos52ehLA&lid=CRnnH6vDVGY]]></href>
+      </Link>
+    </NetworkLink>
+  </Document>
+</kml>
