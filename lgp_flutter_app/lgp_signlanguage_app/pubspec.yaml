@@ -75,6 +75,7 @@ flutter:
     - assets/iconsbar/traduzir_logo.png
     - assets/logoapp.png
     - assets/tf_model/rock_paper_scissors_model.tflite
+    - assets/tf_model/model_final_pt.tflite
     - assets/letters/bothways/letter_a.png
     - assets/letters/bothways/letter_b.png
     - assets/letters/bothways/letter_c.png

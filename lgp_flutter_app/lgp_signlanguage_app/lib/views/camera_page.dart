@@ -19,11 +19,10 @@ class CameraScreen extends StatefulWidget {
 
 class _CameraScreenState extends State<CameraScreen> {
   late CameraController cameraController;
-  late Interpreter interpreter;
   final classifier = Classifier();
 
   bool initialized = false;
-  DetectionClasses detected = DetectionClasses.nothing;
+  int detectedIndex = -1;
   DateTime lastShot = DateTime.now();
   String detectedText = "";
 
@@ -34,24 +33,28 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 
   Future<void> initialize() async {
-    await classifier.loadModel();
+    try {
+      await classifier.loadModel();
 
-    final cameras = await availableCameras();
-    cameraController = CameraController(
-      cameras[0],
-      ResolutionPreset.medium,
-    );
+      final cameras = await availableCameras();
+      cameraController = CameraController(
+        cameras[0],
+        ResolutionPreset.medium,
+      );
 
-    await cameraController.initialize();
-    await cameraController.startImageStream((image) {
-      if (DateTime.now().difference(lastShot).inSeconds > 1) {
-        processCameraImage(image);
-      }
-    });
+      await cameraController.initialize();
+      await cameraController.startImageStream((image) {
+        if (DateTime.now().difference(lastShot).inSeconds > 1) {
+          processCameraImage(image);
+        }
+      });
 
-    setState(() {
-      initialized = true;
-    });
+      setState(() {
+        initialized = true;
+      });
+    } catch (e) {
+      print("Error during initialization: $e");
+    }
   }
 
   Future<void> processCameraImage(CameraImage cameraImage) async {
@@ -59,10 +62,10 @@ class _CameraScreenState extends State<CameraScreen> {
       final convertedImage = ImageUtils.convertCameraImageToImage(cameraImage);
       final result = await classifier.predict(convertedImage);
 
-      if (detected != result) {
+      if (detectedIndex != result) {
         setState(() {
-          detected = result;
-          updateDetectedText(result.label);
+          detectedIndex = result;
+          updateDetectedText(result.toString());
         });
       }
 
@@ -72,11 +75,13 @@ class _CameraScreenState extends State<CameraScreen> {
     }
   }
 
-  void updateDetectedText(String letter) {
-    if (letter != "nothing") {
+  void updateDetectedText(String index) {
+    if (index != "-1") {
       setState(() {
-        detectedText += letter;
+        detectedText += index + " ";
       });
+    } else {
+      print("Nothing detected");
     }
   }
 
@@ -87,7 +92,7 @@ class _CameraScreenState extends State<CameraScreen> {
           ? Column(
               children: [
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.8,
+                  height: MediaQuery.of(context).size.height * 0.5,
                   width: MediaQuery.of(context).size.width,
                   child: CameraPreview(cameraController),
                 ),
@@ -96,7 +101,7 @@ class _CameraScreenState extends State<CameraScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Current: ${detected.label}",
+                        "Current: $detectedIndex",
                         style: const TextStyle(
                           fontSize: 24,
                           color: Colors.blue,

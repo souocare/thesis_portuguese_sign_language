@@ -98,4 +98,28 @@ class ImageUtils {
         ((g << 8) & 0xff00) |
         (r & 0xff);
   }
+
+  // New method to convert color images to grayscale
+  static imageLib.Image convertRGBToGrayscale(imageLib.Image colorImage) {
+    final int width = colorImage.width;
+    final int height = colorImage.height;
+
+    final grayscaleImage = imageLib.Image(width, height);
+
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        final int pixel = colorImage.getPixel(x, y);
+        final int r = imageLib.getRed(pixel);
+        final int g = imageLib.getGreen(pixel);
+        final int b = imageLib.getBlue(pixel);
+
+        // Convert to grayscale using average method
+        final int gray = ((r + g + b) / 3).round();
+
+        grayscaleImage.setPixel(x, y, imageLib.getColor(gray, gray, gray));
+      }
+    }
+
+    return grayscaleImage;
+  }
 }

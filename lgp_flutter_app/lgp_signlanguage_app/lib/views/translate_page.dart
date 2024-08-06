@@ -49,7 +49,7 @@ class _TranslateScreenState extends State<TranslateScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            SizedBox(height: 15),
+            SizedBox(height: 40),
             TextField(
               controller: _textController,
               decoration: InputDecoration(
