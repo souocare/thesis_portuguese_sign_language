@@ -20,7 +20,7 @@ class Predictor {
   Future<void> initialize() async {
     // Initialize TFLite Classifier
     _tfliteClassifier = await Classifier.load(
-        modelFile: 'tf_model/model_cnn_pretrained_20240919.tflite');
+        modelFile: 'assets/tf_model/model_cnn_pretrained_20240919.tflite');
 
     if (_tfliteClassifier == null) {
       throw Exception('Failed to load TFLite classifier');

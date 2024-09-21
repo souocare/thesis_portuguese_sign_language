@@ -169,11 +169,13 @@ class _CameraScreenState extends State<CameraScreen> {
                               ),
                               Switch(
                                 value: useMediaPipeModel,
-                                onChanged: (value) {
-                                  setState(() {
-                                    useMediaPipeModel = value;
-                                  });
-                                },
+                                // onChanged: (value) {
+                                //   setState(() {
+                                //     useMediaPipeModel = value;
+                                //   });
+                                // },
+
+                                onChanged: null, // Disable the switch
                               ),
                               Text(
                                 "MediaPipe Model",
