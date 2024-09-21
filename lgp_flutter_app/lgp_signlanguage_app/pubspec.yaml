@@ -38,7 +38,8 @@ dependencies:
   dcdg: ^4.1.0
   dropdown_search: ^5.0.6
   permission_handler: ^10.2.0
-  tflite_flutter: ^0.10.4
+  tflite_flutter: ^0.9.0
+  tflite_flutter_helper: ^0.3.1
   image: ^3.0.0 
   get: ^4.6.5
   camera: ^0.9.4+5
@@ -75,7 +76,7 @@ flutter:
     - assets/iconsbar/traduzir_logo.png
     - assets/logoapp.png
     - assets/tf_model/rock_paper_scissors_model.tflite
-    - assets/tf_model/model_final_pt.tflite
+    - assets/tf_model/model_cnn_pretrained_20240919.tflite
     - assets/letters/bothways/letter_a.png
     - assets/letters/bothways/letter_b.png
     - assets/letters/bothways/letter_c.png

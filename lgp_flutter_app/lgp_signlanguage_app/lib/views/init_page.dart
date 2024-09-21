@@ -26,7 +26,7 @@ class _BottomNavBarWrapperState extends State<BottomNavBarWrapper> {
         bottomNavigationBar: Obx(
           () => Container(
             padding: EdgeInsets.symmetric(
-                vertical: 20, horizontal: 40), // Adjust for centering
+                vertical: 10, horizontal: 20), // Adjust for centering
             decoration: BoxDecoration(
               color: Colors.white, // Change color as needed
               boxShadow: [

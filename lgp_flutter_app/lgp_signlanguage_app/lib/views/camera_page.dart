@@ -1,14 +1,9 @@
-import 'dart:isolate';
-
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:lgp_signlanguage_app/views/tf_classifier/classes.dart';
-import 'package:lgp_signlanguage_app/views/tf_classifier/classifier.dart';
+import 'package:image/image.dart' as imageLib;
 import 'package:lgp_signlanguage_app/views/tf_classifier/image_utils.dart';
-import 'package:tflite_flutter/tflite_flutter.dart';
-
-final client = http.Client();
+import 'package:lgp_signlanguage_app/views/tf_classifier/predict.dart';
+import 'package:lgp_signlanguage_app/views/tf_classifier/classes.dart'; // Import DetectionClasses
 
 class CameraScreen extends StatefulWidget {
   CameraScreen({super.key});
@@ -18,13 +13,18 @@ class CameraScreen extends StatefulWidget {
 }
 
 class _CameraScreenState extends State<CameraScreen> {
-  late CameraController cameraController;
-  final classifier = Classifier();
-
+  CameraController? cameraController;
+  late List<CameraDescription> cameras;
+  int selectedCameraIndex = 0; // Default to rear camera
   bool initialized = false;
-  int detectedIndex = -1;
+  DetectionClasses detectedLabel =
+      DetectionClasses.nothing; // Stores the detected label as DetectionClasses
   DateTime lastShot = DateTime.now();
   String detectedText = "";
+  bool useMediaPipeModel =
+      false; // Control switch state, default is offline model (tflite)
+
+  final Predictor predictor = Predictor();
 
   @override
   void initState() {
@@ -34,20 +34,12 @@ class _CameraScreenState extends State<CameraScreen> {
 
   Future<void> initialize() async {
     try {
-      await classifier.loadModel();
+      await predictor.initialize(); // Initialize the models
 
-      final cameras = await availableCameras();
-      cameraController = CameraController(
-        cameras[0],
-        ResolutionPreset.medium,
-      );
+      cameras = await availableCameras();
+      selectedCameraIndex = 0; // Use the rear camera by default
 
-      await cameraController.initialize();
-      await cameraController.startImageStream((image) {
-        if (DateTime.now().difference(lastShot).inSeconds > 1) {
-          processCameraImage(image);
-        }
-      });
+      await _initializeCamera(selectedCameraIndex);
 
       setState(() {
         initialized = true;
@@ -57,15 +49,39 @@ class _CameraScreenState extends State<CameraScreen> {
     }
   }
 
+  Future<void> _initializeCamera(int cameraIndex) async {
+    if (cameraController != null) {
+      await cameraController?.dispose();
+    }
+
+    cameraController = CameraController(
+      cameras[cameraIndex],
+      ResolutionPreset.medium,
+    );
+
+    await cameraController?.initialize();
+    await cameraController?.startImageStream((image) {
+      if (DateTime.now().difference(lastShot).inSeconds > 1) {
+        processCameraImage(image);
+      }
+    });
+  }
+
   Future<void> processCameraImage(CameraImage cameraImage) async {
     try {
+      // Convert the camera image to the required format
       final convertedImage = ImageUtils.convertCameraImageToImage(cameraImage);
-      final result = await classifier.predict(convertedImage);
 
-      if (detectedIndex != result) {
+      // Set the model type based on switch state
+      predictor.setUseMediaPipeModel(useMediaPipeModel);
+
+      // Get the prediction using fallback or chosen model
+      final resultLabel = await predictor.predictWithFallback(convertedImage);
+
+      if (resultLabel != null && detectedLabel != resultLabel) {
         setState(() {
-          detectedIndex = result;
-          updateDetectedText(result.toString());
+          detectedLabel = resultLabel; // Assign the DetectionClasses enum
+          updateDetectedText(resultLabel);
         });
       }
 
@@ -75,48 +91,111 @@ class _CameraScreenState extends State<CameraScreen> {
     }
   }
 
-  void updateDetectedText(String index) {
-    if (index != "-1") {
+  void updateDetectedText(DetectionClasses label) {
+    if (label != DetectionClasses.nothing) {
       setState(() {
-        detectedText += index + " ";
+        detectedText +=
+            label.label + " "; // Use .label to convert enum to string
       });
     } else {
       print("Nothing detected");
     }
   }
 
+  void switchCamera() async {
+    // Toggle between front and rear cameras
+    selectedCameraIndex = selectedCameraIndex == 0 ? 1 : 0;
+    await _initializeCamera(selectedCameraIndex);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: initialized
-          ? Column(
+          ? Stack(
               children: [
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.5,
-                  width: MediaQuery.of(context).size.width,
-                  child: CameraPreview(cameraController),
+                Column(
+                  children: [
+                    Center(
+                      child: AspectRatio(
+                        aspectRatio:
+                            1, // Set the aspect ratio to 1:1 for square
+                        child: ClipRect(
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context)
+                                .size
+                                .width, // Square dimensions
+                            child: cameraController != null &&
+                                    cameraController!.value.isInitialized
+                                ? CameraPreview(cameraController!)
+                                : Container(
+                                    color: Colors.black,
+                                    child: const Center(
+                                        child: CircularProgressIndicator()),
+                                  ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Detected: ${detectedLabel.label}", // Display the label using the .label getter
+                            style: const TextStyle(
+                              fontSize: 24,
+                              color: Colors.blue,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            "Text: $detectedText",
+                            style: const TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green,
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          // Add Switch here
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Offline Model",
+                                style: TextStyle(fontSize: 18),
+                              ),
+                              Switch(
+                                value: useMediaPipeModel,
+                                onChanged: (value) {
+                                  setState(() {
+                                    useMediaPipeModel = value;
+                                  });
+                                },
+                              ),
+                              Text(
+                                "MediaPipe Model",
+                                style: TextStyle(fontSize: 18),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Current: $detectedIndex",
-                        style: const TextStyle(
-                          fontSize: 24,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        "Detected: $detectedText",
-                        style: const TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.green,
-                        ),
-                      ),
-                    ],
+                Positioned(
+                  top: 50, // Adjust this value as needed
+                  right: 20,
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.cameraswitch,
+                      color: Colors.white,
+                      size: 40,
+                    ),
+                    onPressed: switchCamera,
                   ),
                 ),
               ],
@@ -127,7 +206,7 @@ class _CameraScreenState extends State<CameraScreen> {
 
   @override
   void dispose() {
-    cameraController.dispose();
+    cameraController?.dispose();
     super.dispose();
   }
 }
