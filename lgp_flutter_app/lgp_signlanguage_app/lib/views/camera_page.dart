@@ -1,9 +1,9 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as imageLib;
-import 'package:lgp_signlanguage_app/views/tf_classifier/image_utils.dart';
-import 'package:lgp_signlanguage_app/views/tf_classifier/predict.dart';
-import 'package:lgp_signlanguage_app/views/tf_classifier/classes.dart'; // Import DetectionClasses
+import 'package:lgp_signlanguage_app/utils/tf_classifier/image_utils.dart';
+import 'package:lgp_signlanguage_app/utils/tf_classifier/predict.dart';
+import 'package:lgp_signlanguage_app/utils/tf_classifier/classes.dart'; // Import DetectionClasses
 
 class CameraScreen extends StatefulWidget {
   CameraScreen({super.key});
